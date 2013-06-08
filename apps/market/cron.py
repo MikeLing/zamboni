@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-
+import os
 import commonware.log
 import cronjobs
 
@@ -44,3 +44,9 @@ def mkt_gc(**kw):
         chunk.sort()
         log.debug('Deleting log entries: %s' % str(chunk))
         amo.tasks.delete_logs.delay(chunk)
+    #Delete the dump apps over 30 days
+    for app in os.listdir(DUMPED_APPS_PATH):
+        app = os.path.join(DUMPED_APPS_PATH, app)
+        if os.stat(app).st_mtime < time.time() - 30*86400:
+            log.debug('Deleting old tarball:{0}'.format(app))
+            os.remove(app)
