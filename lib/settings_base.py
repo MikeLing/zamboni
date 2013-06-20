@@ -1580,3 +1580,5 @@ APP_FEATURES_VERSION = 1
 
 # Whether to throttle API requests. Default is True. Disable where appropriate.
 API_THROTTLE = True
+# The dump app will be deleted if over the time.
+DUMPED_APPS_WRITTEN = 3600 * 24 * 30

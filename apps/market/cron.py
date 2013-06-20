@@ -1,10 +1,11 @@
+import os,time
 from datetime import datetime, timedelta
-import os
+
 import commonware.log
 import cronjobs
-
 from django.conf import settings
 from django.db.models import Count
+from lib.settings_base import DUMPED_APPS_WRITTEN
 
 from addons.models import Addon, AddonUser
 import amo
@@ -44,9 +45,9 @@ def mkt_gc(**kw):
         chunk.sort()
         log.debug('Deleting log entries: %s' % str(chunk))
         amo.tasks.delete_logs.delay(chunk)
-    #Delete the dump apps over 30 days
+    # Delete the dump apps over 30 days.
     for app in os.listdir(DUMPED_APPS_PATH):
         app = os.path.join(DUMPED_APPS_PATH, app)
-        if os.stat(app).st_mtime < time.time() - 30*86400:
+        if os.stat(app).st_mtime < time.time() - DUMPED_APPS_WRITTEN:
             log.debug('Deleting old tarball:{0}'.format(app))
-            os.remove(app)
+

@@ -1,3 +1,4 @@
+import os, time
 from datetime import datetime, timedelta
 
 from nose.tools import eq_
@@ -46,3 +47,10 @@ class TestGarbage(amo.tests.TestCase):
         eq_(ActivityLog.objects.all().count(), 1)
         mkt_gc()
         eq_(ActivityLog.objects.all().count(), 0)
+    def test_dump_delete(self):
+        time_for_temp = (time.time() - DUMPED_APPS_WRITTEN - 1, time.time() - DUMPED_APPS_WRITTEN - 1)
+        os.utime(DUMPED_APPS_PATH, time_for_temp)
+        sum_test = len( [files for files in os.listdir(DUMPED_APPS_PATH)] )
+        assertEqual(sum_test, 1)
+        mkt_gc()
+        assertEqual(sum_test, 0)
