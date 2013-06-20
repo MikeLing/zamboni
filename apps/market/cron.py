@@ -50,4 +50,4 @@ def mkt_gc(**kw):
         app = os.path.join(DUMPED_APPS_PATH, app)
         if os.stat(app).st_mtime < time.time() - DUMPED_APPS_WRITTEN:
             log.debug('Deleting old tarball:{0}'.format(app))
-
+            os.remove(app)
